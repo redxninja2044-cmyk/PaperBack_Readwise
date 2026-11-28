@@ -61,7 +61,7 @@ export function isHiddenGallery(g: HitomiGallery): boolean {
 }
 
 const HIDE_COVERS_KEY = "hitomiplus.hideLibraryCovers";
-export const HIDDEN_COVER = "https://redxninja2044-cmyk.github.io/Flips_Extras/HitomiPlus/static/icon.png";
+export const HIDDEN_COVER = "https://redxninja2044-cmyk.github.io/Flips_Extras/HitomiPlus/static/hidden.png";
 export function getHideCovers(): boolean {
   return (Application.getState(HIDE_COVERS_KEY) as boolean | undefined) ?? false;
 }
