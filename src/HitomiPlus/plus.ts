@@ -59,3 +59,12 @@ export function isHiddenGallery(g: HitomiGallery): boolean {
   if (typesRestricted() && !getTypesSetting().includes(g.type)) return true;
   return (g.tags ?? []).some((t) => isMinorTag(t?.name ?? ""));
 }
+
+const HIDE_COVERS_KEY = "hitomiplus.hideLibraryCovers";
+export const HIDDEN_COVER = "https://redxninja2044-cmyk.github.io/Flips_Extras/HitomiPlus/static/icon.png";
+export function getHideCovers(): boolean {
+  return (Application.getState(HIDE_COVERS_KEY) as boolean | undefined) ?? false;
+}
+export function setHideCovers(v: boolean): void {
+  Application.setState(v, HIDE_COVERS_KEY);
+}

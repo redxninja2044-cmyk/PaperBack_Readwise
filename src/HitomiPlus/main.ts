@@ -31,7 +31,7 @@ import {
 } from "@paperback/types/lib/compat/0.8/searchFilters";
 import { closureSelector } from "@paperback/types/lib/impl/Selector.js";
 import { HitomiSettingsForm } from "./forms";
-import { hiddenIds, GALLERY_TYPES, getTypesSetting, isHiddenGallery, isMinorTag, setTypesSetting, typesRestricted } from "./plus";
+import { getHideCovers, HIDDEN_COVER, hiddenIds, GALLERY_TYPES, getTypesSetting, isHiddenGallery, isMinorTag, setTypesSetting, typesRestricted } from "./plus";
 import { HitomiInterceptor } from "./interceptors";
 import {
   GalleryIdOptions,
@@ -2280,6 +2280,8 @@ export class HitomiExtension implements ExtensionImpl<typeof hitomiInfo> {
   async getMangaDetails(mangaId: string) {
     const res = await this.getMangaDetailsInner(mangaId);
     if (hiddenIds.has(String(mangaId))) throw new Error("Unavailable.");
+    // Covers in the library come from this call, so swapping it here hides them there.
+    if (getHideCovers() && res?.mangaInfo) res.mangaInfo.thumbnailUrl = HIDDEN_COVER;
     return res;
   }
 
