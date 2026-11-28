@@ -68,3 +68,12 @@ export function getHideCovers(): boolean {
 export function setHideCovers(v: boolean): void {
   Application.setState(v, HIDE_COVERS_KEY);
 }
+
+const HIDE_TITLES_KEY = "hitomiplus.hideLibraryTitles";
+export function getHideTitles(): boolean {
+  return (Application.getState(HIDE_TITLES_KEY) as boolean | undefined) ?? false;
+}
+export function setHideTitles(v: boolean): void {
+  Application.setState(v, HIDE_TITLES_KEY);
+}
+export const hiddenTitle = (id: string | number) => `Gallery #${id}`;

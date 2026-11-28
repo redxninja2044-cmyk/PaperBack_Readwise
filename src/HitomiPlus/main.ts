@@ -31,7 +31,7 @@ import {
 } from "@paperback/types/lib/compat/0.8/searchFilters";
 import { closureSelector } from "@paperback/types/lib/impl/Selector.js";
 import { HitomiSettingsForm } from "./forms";
-import { getHideCovers, HIDDEN_COVER, hiddenIds, GALLERY_TYPES, getTypesSetting, isHiddenGallery, isMinorTag, setTypesSetting, typesRestricted } from "./plus";
+import { getHideTitles, hiddenTitle, getHideCovers, HIDDEN_COVER, hiddenIds, GALLERY_TYPES, getTypesSetting, isHiddenGallery, isMinorTag, setTypesSetting, typesRestricted } from "./plus";
 import { HitomiInterceptor } from "./interceptors";
 import {
   GalleryIdOptions,
@@ -2282,6 +2282,11 @@ export class HitomiExtension implements ExtensionImpl<typeof hitomiInfo> {
     if (hiddenIds.has(String(mangaId))) throw new Error("Unavailable.");
     // Covers in the library come from this call, so swapping it here hides them there.
     if (getHideCovers() && res?.mangaInfo) res.mangaInfo.thumbnailUrl = HIDDEN_COVER;
+    if (getHideTitles() && res?.mangaInfo) {
+      res.mangaInfo.primaryTitle = hiddenTitle(mangaId);
+      res.mangaInfo.secondaryTitles = [];
+      res.mangaInfo.synopsis = "";
+    }
     return res;
   }
 
@@ -3810,6 +3815,12 @@ export class HitomiExtension implements ExtensionImpl<typeof hitomiInfo> {
   }
 
   async getChapters(sourceManga: SourceManga): Promise<Chapter[]> {
+    const chapters = await this.getChaptersInner(sourceManga);
+    if (getHideTitles()) for (const c of chapters) c.title = hiddenTitle(sourceManga.mangaId);
+    return chapters;
+  }
+
+  async getChaptersInner(sourceManga: SourceManga): Promise<Chapter[]> {
     this.markForegroundGalleryPressure();
     const gallery = await this.loadGalleryWithRetry(sourceManga.mangaId);
     const isRead = getReadCache().has(sourceManga.mangaId);

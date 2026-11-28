@@ -1,5 +1,5 @@
 /* SPDX-License-Identifier: GPL-3.0-or-later */
-import { getHideCovers, setHideCovers, GALLERY_TYPES, getBlockedArtistsText, getTypesSetting, setBlockedArtistsText, setTypesSetting } from "./plus";
+import { getHideTitles, setHideTitles, getHideCovers, setHideCovers, GALLERY_TYPES, getBlockedArtistsText, getTypesSetting, setBlockedArtistsText, setTypesSetting } from "./plus";
 import {
   ButtonRow,
   EditSection,
@@ -271,6 +271,10 @@ function getDisplayOptionLabel(
 }
 
 export class HitomiSettingsForm extends Form {
+  async updateHideTitles(value: boolean): Promise<void> {
+    setHideTitles(value);
+  }
+
   async updateHideCovers(value: boolean): Promise<void> {
     setHideCovers(value);
   }
@@ -363,6 +367,11 @@ export class HitomiSettingsForm extends Form {
           title: "Hide Library Covers",
           value: getHideCovers(),
           onValueChange: Application.Selector(this as any, "updateHideCovers"),
+        }),
+        ToggleRow("hideTitles", {
+          title: "Hide Library Titles",
+          value: getHideTitles(),
+          onValueChange: Application.Selector(this as any, "updateHideTitles"),
         }),
         InputRow("blockedArtists", {
           title: "Blocked Artists",
